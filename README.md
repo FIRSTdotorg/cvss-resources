@@ -1,0 +1,1 @@
+Future repository for public resources related to the Common Vulnerability Scoring System (CVSS).
