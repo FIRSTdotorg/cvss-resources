@@ -4,4 +4,6 @@ Future repository for public resources related to the Common Vulnerability Scori
 
 For those who wish to implement calculators in their own environments, see the vectorFiles folder for sets of CVSS version 4.0 vectors for use in testing. 
 
+Scripts contained in the vectorEnum folder can be used to generate set of vectors locally or adapted for other use.
+
 Refer to the CVSS v4.0 FAQ document for additional details.
