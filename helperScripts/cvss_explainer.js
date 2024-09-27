@@ -8,7 +8,7 @@ const process = require('process');
 // Static explanation strings for layman-friendly output
 const EXPLANATIONS = {
     en: {
-        baseMetrics: {
+        baseMetricsv4: {
             AV: {
                 N: "The attack can be launched remotely over a network.",
                 A: "The attack requires physical proximity (like being in the same network).",
@@ -16,36 +16,51 @@ const EXPLANATIONS = {
                 P: "The attack requires physical access to the device."
             },
             AC: {
-                L: "It's easy to execute the attack.",
-                H: "The attack requires more effort and preparation."
+                L: "No built-in security-enhancing conditions exist within the product to inhibit successful exploitation.",
+                H: "The attacker must defeat security protections to exploit the vulnerability."
+            AT: {
+                L: "No attack requirements are present.",
+                H: "Attackers must prepare the environment prior to an attack."
             },
             PR: {
-                N: "The attacker doesn't need any special permissions.",
+                N: "No privileges are required for an attacker to successfully exploit the vulnerability.",
                 L: "The attacker needs low-level permissions.",
                 H: "The attacker needs high-level or administrative permissions."
             },
             UI: {
                 N: "The attack can happen without any user action.",
-                R: "The attack requires some user interaction."
+                P: "The attack requires passive user interaction.",
+                A: "The attack requires active user interaction."
             },
-            S: {
-                U: "The impact is limited to the targeted system.",
-                C: "The attack can affect other systems beyond the target."
-            },
-            C: {
-                H: "Sensitive data could be highly compromised.",
-                L: "Some data could be compromised, but the impact is limited.",
+            VC: {
+                H: "Sensitive data could be highly compromised on the vulnerable system.",
+                L: "Some data could be compromised on the vulnerable system, but the impact is limited.",
                 N: "The attack does not impact sensitive data."
             },
-            I: {
-                H: "The attack could significantly alter or corrupt data.",
-                L: "Some data could be changed, but the impact is limited.",
+            VI: {
+                H: "The attack could significantly alter or corrupt data on the vulnerable system.",
+                L: "Some data could be changed on the vulnerable system, but the impact is limited.",
                 N: "Data integrity is not affected by this attack."
             },
-            A: {
-                H: "The system may become unavailable or unusable for a long time.",
-                L: "The system may experience some temporary disruptions.",
+            VA: {
+                H: "The vulnerable system may become unavailable or unusable for a long time.",
+                L: "The vulnerable system may experience some temporary disruptions.",
                 N: "The system's availability is not affected by this attack."
+            }
+            SC: {
+                H: "Sensitive data could be highly compromised on subsequent systems.",
+                L: "Some data could be compromised on subsequent systems, but the impact is limited.",
+                N: "The attack does not impact sensitive data."
+            },
+            SI: {
+                H: "The attack could significantly alter or corrupt data on subsequent systems.",
+                L: "Some data could be changed on subsequent systems, but the impact is limited.",
+                N: "Subsequent system data integrity is not affected by this attack."
+            },
+            SA: {
+                H: "Subsequent systems may become unavailable or unusable for a long time.",
+                L: "Subsequent systems may experience some temporary disruptions.",
+                N: "Subsequent systems are not affected by this attack."
             }
         },
         errors: {
@@ -64,8 +79,8 @@ if (process.argv.length < 3) {
 // Extract the CVSS vector string from the arguments
 const cvssVector = process.argv[2];
 
-// Basic format validation for the CVSS vector (CVSS:4.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N)
-const cvssRegex = /^CVSS:4\.0\/AV:[NALP]\/AC:[LH]\/PR:[NLH]\/UI:[NR]\/S:[UC]\/C:[HLN]\/I:[HLN]\/A:[HLN]$/;
+// Basic format validation for the CVSS vector (CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N)
+const cvssRegex = /^CVSS:4\.0\/AV:[NALP]\/AC:[LH]\/AT:[LH]\/PR:[NLH]\/UI:[NPA]\/VC:[HLN]\/VI:[HLN]\/VA:[HLN]\/SC:[HLN]\/SI:[HLN]\/SA:[HLN]$/;
 
 if (!cvssRegex.test(cvssVector)) {
     console.log(EXPLANATIONS.en.errors.invalidFormat);
