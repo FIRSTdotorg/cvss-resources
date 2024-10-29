@@ -17,3 +17,11 @@ Other ports(JavaScript/TypeScript) pandatix : https://github.com/pandatix/js-cvs
 (Golang) pandatix : https://github.com/pandatix/go-cvss
 
 API implementation of the official calculator, by  Akshat Vaid: https://github.com/akshatvaid/cvss-v4-node-api
+
+# Other CVSS Resources
+
+## cvss-bt Tool
+
+For scoring consumers looking to include more sources of threat information alongside their CVSS calculations, see the cvss-bt tool.
+
+https://github.com/t0sche/cvss-bt
