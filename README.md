@@ -15,6 +15,8 @@ https://www.first.org/cvss/v4.0/faq#List-of-Calculator-Libraries
 **Origin of the official calculator**
 RedHatSecurity : https://github.com/RedHatProductSecurity/cvss
 
+Python version of the Red Hat library: https://pypi.org/project/cvss/
+
 API implementation of the official calculator, by Akshat Vaid: https://github.com/akshatvaid/cvss-v4-node-api
 
 ### Other ports
