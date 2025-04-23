@@ -61,3 +61,17 @@ https://github.com/t0sche/cvss-bt
 Various tools for extracting CVSS data from content and determining mathematical weights of CVSS scoring values.
 
 https://github.com/NetKingJ/CVSS
+
+### Nick's various CVSS tools
+
+Various tools for CVSS work.
+
+#### cvss-reverse
+
+Generate CVSS v3.1 vector strings from existing v4.0 strings. Can be used to automate vector string generation.
+https://github.com/nickleali/mycvss/blob/main/cvss_reverse.py
+
+#### cvss-comparer
+
+Tied to the 2025 VulnCon talk "CVSS By the Numbers", this tool compares sets of CVSS v3.1 and v4.0 vector strings and does mathematical analysis on the evaluations. Useful for determining changes in score data between the standards to guide decision-making.
+https://github.com/nickleali/mycvss/tree/main/cvss-comparer
