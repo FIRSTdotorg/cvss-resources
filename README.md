@@ -1,3 +1,9 @@
+# CVSS Resources
+
+This repo is maintained by the FIRST CVSS SIG to list resources used for the CVSS standard.
+
+See more at FIRST: https://www.first.org/cvss/
+
 # CVSS Calculator Validation
 
 For those who wish to implement calculators in their own environments, see the vectorFiles folder for sets of CVSS version 4.0 vectors for use in testing. 
@@ -35,8 +41,23 @@ API implementation of the official calculator, by Akshat Vaid: https://github.co
 
 # Other CVSS Resources
 
-## cvss-bt Tool
+## Learning Resources
+
+### CVSS usage by Marta Rybczynska
+
+Helpful blog post about CVSS v4.0 usage from the Eclipse Foundation.
+https://blogs.eclipse.org/post/marta-rybczynska/update-vulnerability-description-cvss-40
+
+## Software Tools
+
+### cvss-bt Tool
 
 For scoring consumers looking to include more sources of threat information alongside their CVSS calculations, see the cvss-bt tool.
 
 https://github.com/t0sche/cvss-bt
+
+### Netking's CVSS data extractors
+
+Various tools for extracting CVSS data from content and determining mathematical weights of CVSS scoring values.
+
+https://github.com/NetKingJ/CVSS
