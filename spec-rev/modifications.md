@@ -67,6 +67,16 @@ Confusion over configuration, the “deployment and execution conditions”. Nee
 Net addition: 
 + Ephemeral systems that may not always be accessible and do not persist between creation and removal.
 
+#### User Interaction
+
+Remove mention of CSRF, based on our FAQ, from Passive.
+
+https://www.first.org/cvss/v4.0/faq#How-is-the-User-Interaction-metric-used-in-relation-to-CSRF-vulnerabilities
+
+##### Desired change
+
+-  or CSRF
+
 #### Privileges Required
 
 As written, assigning PR:High should rarely if ever result in privilege delta and CIA impacts. We need to clarify what is PR:H, without calling this admin.
@@ -96,6 +106,8 @@ https://www.cve.org/resourcessupport/allresources/cnarules#section_4-1_Vulnerabi
 #### Impact metrics
 
 ##### General
+
+Privilege delta and the determination of changes and gain. 
 
 For generative AI / LLM systems, the data within the system versus outputs of the system. Is our stance still correct with regards to CVSS? Do any descriptions in the spec doc need to change?
 

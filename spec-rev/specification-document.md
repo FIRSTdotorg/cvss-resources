@@ -46,7 +46,7 @@ other vulnerabilities.
 CVSS is composed of four metric groups: Base, Threat, Environmental, and
 Supplemental. The Base Score reflects the severity of a vulnerability according
 to its intrinsic characteristics which are constant over time and assumes the
-reasonable worst-case impact across different deployed environments. The Threat
+reasonable worst-case impact across different deployed environments independent of specific asset protections. The Threat
 Metrics adjust the severity of a vulnerability based on factors, such as the
 availability of proof-of-concept code or active exploitation. The Environmental
 Metrics further refine the resulting severity score to a specific computing
@@ -57,9 +57,11 @@ a vulnerability, intended to add context.
 
 Base Metrics, and optionally Supplemental Metrics, are provided by the
 organization maintaining the vulnerable system, or a third party assessment on
-their behalf. Threat and Environmental information is available to only the end
-consumer. Consumers of CVSS should enrich the Base metrics with Threat and
-Environmental metric values specific to their use of the vulnerable system to
+their behalf. CVSS consumers should use information in their environment to enrich 
+vendor-provided CVSS Base vectors with Threat and Environmental metrics. Vendors 
+may also provide Threat metrics based on known threat intelligence at the time of 
+CVSS Base vector publication. Consumers of CVSS should enrich the Base metrics 
+with Threat and Environmental metric values specific to their use of the vulnerable system to
 produce a score that provides a more comprehensive input to risk assessment
 specific to their organization. Consumers may use CVSS information as input to
 an organizational vulnerability management process that also considers factors
@@ -246,7 +248,7 @@ severity. The list of possible values is presented in Table 1.
 | **Metric Value** | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 |------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Network (N)      | The vulnerable system is bound to the network stack and the set of possible attackers extends beyond the other options listed below, up to and including the entire Internet. Such a vulnerability is often termed “remotely exploitable” and can be thought of as an attack being exploitable *at the protocol level* one or more network hops away (e.g., across one or more routers). An example of a network attack is an attacker causing a denial of service (DoS) by sending a specially crafted TCP packet across a wide area network (e.g., CVE-2004-0230).                                             |
-| Adjacent (A)     | The vulnerable system is bound to a protocol stack, but the attack is limited *at the protocol level* to a logically adjacent topology. This can mean an attack must be launched from the same shared proximity (e.g., Bluetooth, NFC, or IEEE 802.11) or logical network (e.g., local IP subnet), or from within a secure or otherwise limited administrative domain (e.g., MPLS, secure VPN within an administrative network zone). One example of an Adjacent attack would be an ARP (IPv4) or neighbor discovery (IPv6) flood leading to a denial of service on the local LAN segment (e.g., CVE-2013-6014). |
+| Adjacent (A)     | The vulnerable system is bound to a protocol stack, but the attack is limited *at the protocol level* to a logically adjacent topology. This can mean an attack must be launched from the same shared proximity (e.g., Bluetooth, NFC, or IEEE 802.11) or logical network (e.g., local IP subnet), or from within a secure or otherwise limited administrative domain (e.g., MPLS, secure VPN within an administrative network zone) where the limited administrative domain restricts access based on technological limitations, not the presence of other security controls or deployment characteristics. One example of an Adjacent attack would be an ARP (IPv4) or neighbor discovery (IPv6) flood leading to a denial of service on the local LAN segment (e.g., CVE-2013-6014). |
 | Local (L)        | The vulnerable system is not bound to the network stack and the attacker’s path is via read/write/execute capabilities. Either: <br> <br> the attacker exploits the vulnerability by accessing the target system locally (e.g., keyboard, console), or through terminal emulation (e.g., SSH); *or* <br> <br> the attacker relies on User Interaction by another person to perform actions required to exploit the vulnerability (e.g., using social engineering techniques to trick a legitimate user into opening a malicious document).                                                                                           |
 | Physical (P)     | The attack requires the attacker to physically touch or manipulate the vulnerable system. Physical interaction may be brief (e.g., evil maid attack[^1]) or persistent. An example of such an attack is a cold boot attack in which an attacker gains access to disk encryption keys after physically accessing the target system. Other examples include peripheral attacks via FireWire/USB Direct Memory Access (DMA).                                                                                                                                                                                        |
 
@@ -289,8 +291,7 @@ is present.
 
 ### Attack Requirements (AT)
 
-This metric captures the prerequisite **deployment and execution conditions or
-variables** of the vulnerable system that enable the attack. These differ from
+This metric captures the variance of system states that may cause unreliable attacks. These differ from
 security-enhancing techniques/technologies (ref *Attack Complexity*) as the
 primary purpose of these conditions is **not** to explicitly mitigate attacks,
 but rather, emerge naturally as a consequence of the deployment and execution of
@@ -302,7 +303,7 @@ conditions, the attack may succeed only occasionally or not succeed at all.
 | **Metric Value** | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 |------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | None (N)         | The successful attack does not depend on the deployment and execution conditions of the vulnerable system. The attacker can expect to be able to reach the vulnerability and execute the exploit under all or most instances of the vulnerability.                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| Present (P)      | The successful attack depends on the presence of specific deployment and execution conditions of the vulnerable system that enable the attack. These include: <br> <br>A **race condition** must be won to successfully exploit the vulnerability. The successfulness of the attack is conditioned on execution conditions that are not under full control of the attacker. The attack may need to be launched multiple times against a single target before being successful. <br><br>Network injection. The attacker must inject themselves into the logical network path between the target and the resource requested by the victim (e.g. vulnerabilities requiring an on-path attacker). |
+| Present (P)      | The successful attack depends on the presence of specific deployment and execution conditions of the vulnerable system that enable the attack. These include: <br> <br>A **race condition** must be won to successfully exploit the vulnerability. The successfulness of the attack is conditioned on execution conditions that are not under full control of the attacker. The attack may need to be launched multiple times against a single target before being successful. <br><br>Network injection. The attacker must inject themselves into the logical network path between the target and the resource requested by the victim (e.g. vulnerabilities requiring an on-path attacker). <br><br>Ephemeral systems that may not always be accessible and do not persist between creation and removal. |
 
 ### Privileges Required (PR)
 
@@ -322,7 +323,7 @@ possible values is presented in Table 4.
 |------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | None (N)         | The attacker is unauthenticated prior to attack, and therefore does not require any access to settings or files of the vulnerable system to carry out an attack.                                                                                                    |
 | Low (L)          | The attacker requires privileges that provide basic capabilities that are typically limited to settings and resources owned by a single low-privileged user. Alternatively, an attacker with Low privileges has the ability to access only non-sensitive resources. |
-| High (H)         | The attacker requires privileges that provide significant (e.g., administrative) control over the vulnerable system allowing full access to the vulnerable system’s settings and files.                                                                             |
+| High (H)         | The attacker requires privileges that provide significant control over the vulnerable system that allow for modification of at least some of the vulnerable system’s settings and files.                                                                             |
 
 **Assessment Guidance:** Privileges Required is usually None for hard-coded
 credential vulnerabilities or vulnerabilities requiring social engineering
@@ -345,8 +346,8 @@ interaction is required. The list of possible values is presented in Table 5.
 | **Metric Value** | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 |------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | None (N)         | The vulnerable system can be exploited without interaction from any human user, other than the attacker. Examples include: a remote attacker is able to send packets to a target system a locally authenticated attacker executes code to elevate privileges                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| Passive (P)      | Successful exploitation of this vulnerability requires limited interaction by the targeted user with the vulnerable system and the attacker’s payload. These interactions would be considered involuntary and do not require that the user actively subvert protections built into the vulnerable system. Examples include: <br> <br>utilizing a website that has been modified to display malicious content when the page is rendered (most stored XSS or CSRF)<br><br>running an application that calls a malicious binary that has been planted on the system <br><br>using an application which generates traffic over an untrusted or compromised network (vulnerabilities requiring an on-path attacker) |
-| Active (A)       | Successful exploitation of this vulnerability requires a targeted user to perform specific, conscious interactions with the vulnerable system and the attacker’s payload, or the user’s interactions would actively subvert protection mechanisms which would lead to exploitation of the vulnerability. Examples include: <br> <br>importing a file into a vulnerable system in a specific manner <br><br>placing files into a specific directory prior to executing code <br><br>submitting a specific string into a web application (e.g. reflected or self XSS) dismiss or accept prompts or security warnings prior to taking an action (e.g. opening/editing a file, connecting a device).                |
+| Passive (P)      | Successful exploitation of this vulnerability requires limited interaction by the targeted user with the vulnerable system and the attacker’s payload. These interactions would be considered involuntary and do not require that the user actively subvert protections built into the vulnerable system. Examples include: <br> <br>utilizing a website that has been modified to display malicious content when the page is rendered (most stored XSS)<br><br>running an application that calls a malicious binary that has been planted on the system <br><br>using an application which generates traffic over an untrusted or compromised network (vulnerabilities requiring an on-path attacker) |
+| Active (A)       | Successful exploitation of this vulnerability requires a targeted user to perform specific, conscious interactions with the vulnerable system and the attacker’s payload, or the user’s interactions would actively subvert protection mechanisms which would lead to exploitation of the vulnerability. Examples include: <br> <br>importing a file into a vulnerable system in a specific manner <br><br>placing files into a specific directory prior to executing code <br><br>submitting a specific string into a web application (e.g. reflected or self XSS, or CSRF) dismiss or accept prompts or security warnings prior to taking an action (e.g. opening/editing a file, connecting a device).                |
 
 ## Impact Metrics
 
@@ -369,6 +370,8 @@ information (Confidentiality Low) and successful exploitation of the
 vulnerability results in complete loss in confidentiality (Confidentiality
 High), then the resultant CVSS Base metric value should reference the “end game”
 Impact metric value (Confidentiality High).
+
+The impact metrics should reflect the actual increase in the attacker capabilities, if an attacker already possesses significant or high privileges before exploitation, and the vulnerability only grants additional, but not fundamentally broader or more damaging, capabilities, the impact metrics should convey the limited gain via values of “Low” or “Medium”. To clarify, if an attacker with administrative access gains only minor additional privileges, this does not necessarily warrant scoring any of the Confidentiality, Integrity, or Availability metrics as "High." The impact should be rated based on the significance of the change in capabilities, not solely on the absolute privilege level post-exploitation.
 
 When identifying values for the impact metrics, assessment providers need to
 account for impacts both to the Vulnerable System and impacts outside of the
@@ -493,7 +496,7 @@ availability for a vulnerability.
 
 ## Exploit Maturity (E)
 
-This metric measures the likelihood of the vulnerability being attacked, and is
+This metric measures the likelihood of adversaries targeting the vulnerability, and is
 based on the current state of exploit techniques, exploit code availability, or
 active, “in-the-wild” exploitation. Public availability of easy-to-use exploit
 code or exploitation instructions increases the number of potential attackers by
@@ -505,7 +508,7 @@ from a proof-of-concept demonstration to exploit code that is successful in
 exploiting the vulnerability consistently. In severe cases, it may be delivered
 as the payload of a network-based worm or virus or other automated attack tools.
 
-It is the responsibility of the CVSS consumer to populate the values of Exploit
+While vendors may provide Threat metric values, it is the ultimately the responsibility of the CVSS consumer to populate the values of Exploit
 Maturity (E) based on information regarding the availability of exploitation
 code/processes and the state of exploitation techniques. This information will
 be referred to as “threat intelligence” throughout this document.
@@ -524,10 +527,10 @@ vulnerability can be exploited, the higher the vulnerability score.
 
 | **Metric Value**     | **Description**                                                                                                                                                                                                                                                                                                                                                     |
 |----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Not Defined (X)      | Reliable threat intelligence is not available to determine Exploit Maturity characteristics. This is the default value and is equivalent to Attacked (A) for the purposes of the calculation of the score by assuming the worst case.                                                                                                                               |
-| Attacked (A)         | Based on available threat intelligence either of the following must apply: <br>Attacks targeting this vulnerability (attempted or successful) have been reported <br>Solutions to simplify attempts to exploit the vulnerability are publicly or privately available (such as exploit toolkits)                                                                             |
-| Proof-of-Concept (P) | Based on available threat intelligence each of the following must apply: <br>Proof-of-concept exploit code is publicly available <br>No knowledge of reported attempts to exploit this vulnerability <br>No knowledge of publicly available solutions used to simplify attempts to exploit the vulnerability (i.e., the “Attacked” value does not apply)                        |
-| Unreported (U)       | Based on available threat intelligence each of the following must apply: <br>No knowledge of publicly available proof-of-concept exploit code No knowledge of reported attempts to exploit this vulnerability <br>No knowledge of publicly available solutions used to simplify attempts to exploit the vulnerability (i.e., neither the “POC” nor “Attacked” values apply) |
+| Default (X)      | Reliable threat intelligence is not available to determine Exploit Maturity characteristics. This is the default value and is equivalent to Attacked (A) for the purposes of the calculation of the score by assuming the worst case.                                                                                                                               |
+| Active (A)         | Based on available threat intelligence, either of the following have been observed: <br>Attacks targeting this vulnerability (attempted or successful)<br> Solutions to simplify attempts to exploit the vulnerability are publicly or privately available (such as exploit toolkits)|
+| Proof-of-Concept (P) | Based on available threat intelligence each of the following must apply: <br>The “Active” value does not apply<br>Proof-of-concept exploit code is publicly available|
+| Unreported (U)       | Neither the “POC” nor “Active” values apply |
 
 # Environmental Metrics
 
@@ -1278,7 +1281,7 @@ Interest Group (SIG) members, listed in alphabetical order by last name:
 -   Melinda Rosario
 -   Zach Shue, Kiewit
 -   Daniel Sommerfeld, Microsoft
--   Jonathan Spring, Cybersecurity and Infrastructure Security Agency (CISA)
+-   Jonathan Spring, Cybersecurity & Infrastructure Security Agency (CISA)
 -   Janane Suresh, Oracle
 -   Masato Tereada
 -   Matt Tesauro
@@ -1336,3 +1339,4 @@ transfer CVSS information in defined JSON and XML formats.
 | 2023-11-01 | v1.0 | Initial Publication                                                              |
 | 2023-11-09 | v1.1 | Correct impact metric order Corrected reference to Section 2.5 of the User Guide |
 | 2024-06-18 | v1.2 | Corrected None metric in Section 2.2.3 Table 7                                   |
+| 2026-XX-XX | v1.3 | Numerous language improvements.                                                  |
