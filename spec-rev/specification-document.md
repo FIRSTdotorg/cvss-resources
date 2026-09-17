@@ -1,8 +1,8 @@
-# Common Vulnerability Scoring System version 4.0: Specification Document{.header-title}
+# Common Vulnerability Scoring System version 4.0 revision 1 (draft): Specification Document{.header-title}
 
 Also available [in PDF format](/cvss/v4-0/cvss-v40-specification.pdf).
   
-Document Version: 1.2
+Document Version: 1.3
 
 The Common Vulnerability Scoring System (CVSS) is an open framework for
 communicating the characteristics and severity of software vulnerabilities. CVSS
@@ -49,7 +49,7 @@ to its intrinsic characteristics which are constant over time and assumes the
 reasonable worst-case impact across different deployed environments independent of specific asset protections. The Threat
 Metrics adjust the severity of a vulnerability based on factors, such as the
 availability of proof-of-concept code or active exploitation. The Environmental
-Metrics further refine the resulting severity score to a specific computing
+Metrics further refine the resulting severity score to a specific asset within a computing
 environment. They consider factors such as the presence of mitigations in that
 environment and the criticality attributes of the vulnerable system. Finally,
 the Supplemental Metrics describe and measure additional extrinsic attributes of
@@ -57,11 +57,10 @@ a vulnerability, intended to add context.
 
 Base Metrics, and optionally Supplemental Metrics, are provided by the
 organization maintaining the vulnerable system, or a third party assessment on
-their behalf. CVSS consumers should use information in their environment to enrich 
-vendor-provided CVSS Base vectors with Threat and Environmental metrics. Vendors 
-may also provide Threat metrics based on known threat intelligence at the time of 
-CVSS Base vector publication. Consumers of CVSS should enrich the Base metrics 
-with Threat and Environmental metric values specific to their use of the vulnerable system to
+their behalf. Vendors may also provide Threat metrics, along with Base metrics, 
+based on known threat intelligence at the time of 
+CVSS Base vector publication. Consumers of CVSS should strongly prefer enrichment 
+of the Base metrics with Threat and Environmental metric values specific to their use of the vulnerable system to
 produce a score that provides a more comprehensive input to risk assessment
 specific to their organization. Consumers may use CVSS information as input to
 an organizational vulnerability management process that also considers factors
@@ -248,7 +247,7 @@ severity. The list of possible values is presented in Table 1.
 | **Metric Value** | **Description**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 |------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Network (N)      | The vulnerable system is bound to the network stack and the set of possible attackers extends beyond the other options listed below, up to and including the entire Internet. Such a vulnerability is often termed “remotely exploitable” and can be thought of as an attack being exploitable *at the protocol level* one or more network hops away (e.g., across one or more routers). An example of a network attack is an attacker causing a denial of service (DoS) by sending a specially crafted TCP packet across a wide area network (e.g., CVE-2004-0230).                                             |
-| Adjacent (A)     | The vulnerable system is bound to a protocol stack, but the attack is limited *at the protocol level* to a logically adjacent topology. This can mean an attack must be launched from the same shared proximity (e.g., Bluetooth, NFC, or IEEE 802.11) or logical network (e.g., local IP subnet), or from within a secure or otherwise limited administrative domain (e.g., MPLS, secure VPN within an administrative network zone) where the limited administrative domain restricts access based on technological limitations, not the presence of other security controls or deployment characteristics. One example of an Adjacent attack would be an ARP (IPv4) or neighbor discovery (IPv6) flood leading to a denial of service on the local LAN segment (e.g., CVE-2013-6014). |
+| Adjacent (A)     | The vulnerable system is bound to a protocol stack, but the attack is limited *at the protocol level* to a logically adjacent topology. This can mean an attack must be launched from the same shared proximity (e.g., Bluetooth, NFC, or IEEE 802.11) or logical network (e.g., local IP subnet), or from within a secure or otherwise limited administrative domain (e.g., MPLS, secure VPN within an administrative network zone) independent of other security controls or deployment characteristics. One example of an Adjacent attack would be an ARP (IPv4) or neighbor discovery (IPv6) flood leading to a denial of service on the local LAN segment (e.g., CVE-2013-6014). |
 | Local (L)        | The vulnerable system is not bound to the network stack and the attacker’s path is via read/write/execute capabilities. Either: <br> <br> the attacker exploits the vulnerability by accessing the target system locally (e.g., keyboard, console), or through terminal emulation (e.g., SSH); *or* <br> <br> the attacker relies on User Interaction by another person to perform actions required to exploit the vulnerability (e.g., using social engineering techniques to trick a legitimate user into opening a malicious document).                                                                                           |
 | Physical (P)     | The attack requires the attacker to physically touch or manipulate the vulnerable system. Physical interaction may be brief (e.g., evil maid attack[^1]) or persistent. An example of such an attack is a cold boot attack in which an attacker gains access to disk encryption keys after physically accessing the target system. Other examples include peripheral attacks via FireWire/USB Direct Memory Access (DMA).                                                                                                                                                                                        |
 
@@ -314,16 +313,17 @@ is outside the scope of this metric. Generally, self-service provisioned
 accounts do not constitute a privilege requirement if the attacker can grant
 themselves privileges as part of the attack.
 
-The resulting score is greatest if no privileges are required. The list of
-possible values is presented in Table 4.
+The resulting score is greatest if no privileges are required. As part of assessments, 
+scoring providers are encouraged to specify details that qualify the rating of 
+either Low or High privileges. The list of possible values is presented in Table 4.
 
 **Table 4: Privileges Required**
 
 | **Metric Value** | **Description**                                                                                                                                                                                                                                                     |
 |------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| None (N)         | The attacker is unauthenticated prior to attack, and therefore does not require any access to settings or files of the vulnerable system to carry out an attack.                                                                                                    |
+| None (N)         | The attacker is unauthenticated prior to attack, and therefore does not require any access to settings or files of the vulnerable system to carry out an attack, or the attacker can freely gain necessary privileges as part of an exploit.                                                                                                    |
 | Low (L)          | The attacker requires privileges that provide basic capabilities that are typically limited to settings and resources owned by a single low-privileged user. Alternatively, an attacker with Low privileges has the ability to access only non-sensitive resources. |
-| High (H)         | The attacker requires privileges that provide significant control over the vulnerable system that allow for modification of at least some of the vulnerable system’s settings and files.                                                                             |
+| High (H)         | The attacker requires privileges that provide significant (e.g., administrative) control over the vulnerable system allowing full access to the vulnerable system’s settings and files. These privileges are typically not granted by default to a user of the system and only available to a (small) subset of users.                                                                             |
 
 **Assessment Guidance:** Privileges Required is usually None for hard-coded
 credential vulnerabilities or vulnerabilities requiring social engineering
@@ -371,7 +371,7 @@ vulnerability results in complete loss in confidentiality (Confidentiality
 High), then the resultant CVSS Base metric value should reference the “end game”
 Impact metric value (Confidentiality High).
 
-The impact metrics should reflect the actual increase in the attacker capabilities, if an attacker already possesses significant or high privileges before exploitation, and the vulnerability only grants additional, but not fundamentally broader or more damaging, capabilities, the impact metrics should convey the limited gain via values of “Low” or “Medium”. To clarify, if an attacker with administrative access gains only minor additional privileges, this does not necessarily warrant scoring any of the Confidentiality, Integrity, or Availability metrics as "High." The impact should be rated based on the significance of the change in capabilities, not solely on the absolute privilege level post-exploitation.
+The impact metrics should reflect the actual increase in the attacker capabilities. An attacker who already possesses significant privileges prior to exploitation and exploits a vulnerability may gain only additional, but not fundamentally broader or more damaging, capabilities. In this event, the impact metrics should convey the limited gain via values of “None” or “Low”. An attacker with administrative privilege who gains only minor additional privileges does not warrant assessment any of the Confidentiality, Integrity, or Availability metrics as "High." The impact should be rated based on the significance of the change in capabilities, not solely on the absolute privilege level post-exploitation.
 
 When identifying values for the impact metrics, assessment providers need to
 account for impacts both to the Vulnerable System and impacts outside of the
@@ -508,10 +508,11 @@ from a proof-of-concept demonstration to exploit code that is successful in
 exploiting the vulnerability consistently. In severe cases, it may be delivered
 as the payload of a network-based worm or virus or other automated attack tools.
 
-While vendors may provide Threat metric values, it is the ultimately the responsibility of the CVSS consumer to populate the values of Exploit
-Maturity (E) based on information regarding the availability of exploitation
-code/processes and the state of exploitation techniques. This information will
-be referred to as “threat intelligence” throughout this document.
+While vendors may provide Threat metric values, it is the ultimately the responsibility 
+of the CVSS consumer to populate the values of Exploit Maturity (E) based on information 
+regarding the availability of exploitation code/processes and the state of 
+exploitation techniques. This information will be referred to as “threat intelligence” 
+throughout this document.
 
 Operational Recommendation: Threat intelligence sources that provide Exploit
 Maturity information for all vulnerabilities should be preferred over those with
@@ -527,8 +528,8 @@ vulnerability can be exploited, the higher the vulnerability score.
 
 | **Metric Value**     | **Description**                                                                                                                                                                                                                                                                                                                                                     |
 |----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Default (X)      | Reliable threat intelligence is not available to determine Exploit Maturity characteristics. This is the default value and is equivalent to Attacked (A) for the purposes of the calculation of the score by assuming the worst case.                                                                                                                               |
-| Active (A)         | Based on available threat intelligence, either of the following have been observed: <br>Attacks targeting this vulnerability (attempted or successful)<br> Solutions to simplify attempts to exploit the vulnerability are publicly or privately available (such as exploit toolkits)|
+| Not Defined (X)      | Reliable threat intelligence is not available to determine Exploit Maturity characteristics. This is the default value and is equivalent to Attacked (A) for the purposes of the calculation of the score by assuming the worst case.                                                                                                                               |
+| Attacked (A)         | Based on available threat intelligence, either of the following have been observed: <br>Attacks targeting this vulnerability (attempted or successful)<br> Solutions to simplify attempts to exploit the vulnerability are publicly or privately available (such as exploit toolkits)|
 | Proof-of-Concept (P) | Based on available threat intelligence each of the following must apply: <br>The “Active” value does not apply<br>Proof-of-concept exploit code is publicly available|
 | Unreported (U)       | Neither the “POC” nor “Active” values apply |
 
@@ -838,7 +839,7 @@ the quickest available response should be considered.
 # Qualitative Severity Rating Scale
 
 For some purposes it is useful to have a textual representation of the resulting
-numeric Base, Threat and Environmental scores. All CVSS scores regardless of
+numeric score. All CVSS scores regardless of
 nomenclature can be mapped to the qualitative ratings defined in Table 22.[^3]
 
 [^3]: Note that this mapping between quantitative and qualitative scores applies
@@ -883,6 +884,10 @@ value of Not Defined can be explicitly included in a vector string if desired.
 Systems that produce or consume CVSS v4.0 vector strings must do so in the
 following order and treat unspecified Threat, Environmental and Supplemental as
 Not Defined. A vector string must not include the same metric more than once.
+
+Note that the metric values from all vectors are always calculated for all scores, 
+even if those metric values are not present in the metric string. Refer to Section 
+8 CVSS v4.0 Scoring for details.
 
 **Table 23: Base, Threat and Environmental Vectors**
 
