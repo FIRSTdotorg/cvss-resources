@@ -338,6 +338,10 @@ parsing vulnerability in a PDF reader). Default credentials that have not been
 changed or are not unique across each environment should be treated similarly to
 hard-coded credentials.
 
+If the attacker has already complete administrative privileges with the ability to 
+manipulate any configuration and process in the system, the attacker gains no 
+additional privileges and per CVSS assessment this case would not be considered a software vulnerability.
+
 ### User Interaction (UI)
 
 This metric captures the requirement for a human user, other than the attacker,
