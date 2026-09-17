@@ -147,10 +147,12 @@ highly recommended for more meaningful results.
 
 Generally, the Base metrics are specified by vulnerability bulletin analysts,
 product vendors, or application vendors because they typically possess the most
-accurate information about the characteristics of a vulnerability. The Threat
+accurate information about the characteristics of a vulnerability. Base metrics 
+provided by the primary vendor should be preferred by CVSS consumers. The Threat
 and Environmental metrics are specified by consumer organizations because they
 are best able to assess the potential impact of a vulnerability within their own
-computing environment, at a given point in time.
+computing environment, at a given point in time. However, product vendors may 
+also optionally provide Threat metrics based on their available threat intelligence.
 
 Assessing CVSS metrics also produces a vector string, a textual representation
 of the metric values used to derive a quantitative score and qualitative rating
@@ -162,8 +164,12 @@ The scoring assessment and vector string are explained further below.
 
 Note that all metrics should be assessed under the assumption that the attacker
 has perfect knowledge of the vulnerability. That is, the analyst need not
-consider the means by which the vulnerability was identified. In addition, it is
-likely that many different types of individuals will be assessing
+consider the means by which the vulnerability was identified. Analysts should
+perform assessments under the assumption that the system configuration is in 
+a vulnerable state, provided the vulnerable state is a reasonable, supported 
+configuration and not well-known, non-default, and unsafe configurations.
+
+In addition, it is likely that many different types of individuals will be assessing
 vulnerabilities (e.g., software vendors, vulnerability bulletin analysts,
 security product vendors), however, note that CVSS assessment is intended to be
 agnostic to the individual and their organization.
